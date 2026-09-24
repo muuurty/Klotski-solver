@@ -3,22 +3,9 @@ import time
 import colorsys
 import keyboard as ky
 
-size =     ((1,1,1,1,1,1,2,1,2,1), (2,1,1,2,1,1,1,2,2,2)) # og lv 30
-position = ((0,1,2,3,1,2,1,0,1,3), (0,0,0,0,1,1,2,3,3,3))
-
-# size =     ((2,1,1,1,1,1,1,2,1,1), (1,2,1,2,2,1,2,2,1,1)) # lv 15
-# position = ((2,0,1,2,3,1,0,1,3,3), (0,1,1,1,1,2,3,3,3,4))
-
-# size =     ((1,1,2,1,1,2,2,1,1,1,2,1), (1,1,1,1,1,1,1,1,1,1,2,1)) # lv 14
-# position = ((0,1,2,0,1,2,0,2,3,0,1,3), (0,0,0,1,1,1,2,2,2,3,3,3))
-
-# size =     ((1,1,1,1,2,1,2,1,1,1), (2,2,2,2,1,1,2,1,1,1)) # lv 10
-# position = ((1,2,0,3,1,0,1,3,0,3), (0,0,1,1,2,3,3,3,4,4))
-
 colors = ()
 
 grid_size=(4,5)  #x,y
-
 
 # prebacit u cpp
 def is_empty(position, xcheck, ycheck, max_x_size, max_y_size):
@@ -76,19 +63,11 @@ def all_possible_moves(position, max_x_size, max_y_size):
     return tuple(moves)
 
 # ostaje
-def paintBIG(pixels, pic_size=50, space_size=5, border=5):
-    print(pixels)
+def paintBIG(pixels, step=0, num_steps=0, pic_size=50, space_size=5, border=5):
     turtle.reset()
-    col = rainbow_colors(len(pixels[0]))
-
-    # tuple.width(border)
-    # tuple.color("white")
-    # turtle.goto(-border/2, -border/2)
-    # tuple.goto(size[0]+border/2, -border/2)
-    # tuple.goto(size[0]+border/2, size[1]+border/2)
-    # tuple.goto(-border/2, size[1]+border/2) 
-    # turtle.goto(-border/2, -border/2)
-
+    # col = rainbow_colors(len(pixels[0]))
+    col = [(234, 210, 162)]*len(pixels[0])
+    col[key_peace] = (255, 0, 0)
     screen = turtle.Screen()
     screen.tracer(0)
     turtle.colormode(255)
@@ -118,7 +97,18 @@ def paintBIG(pixels, pic_size=50, space_size=5, border=5):
 
         turtle.end_fill()
         turtle.pu()
-
+    if num_steps != 0:
+        turtle.goto(0, -40)
+        turtle.write(f"{step+1}/{num_steps}", font=('Arial', 20, 'normal'))
+        turtle.st()
+        turtle.goto(-pic_size/2, 0)
+        turtle.pd()
+        turtle.width(5)
+        turtle.goto(-pic_size/2, grid_size[1]*pic_size)
+        turtle.pu()
+        turtle.color("red")
+        turtle.shape("circle")
+        turtle.goto(-pic_size/2, grid_size[1]*pic_size*(step+1)/num_steps)
     screen.update()
 def rainbow_colors(n):
     if n <= 0:
@@ -161,12 +151,18 @@ def find_sequence(solution, layers):
                 sequence.append(j)
                 done = True
     return sequence
-def paint_list(pic_list, next_button="p"):
+def paint_list(pic_list):
     start_paint()
-    for i in range(len(pic_list)):
-        paintBIG(pic_list[len(pic_list)-i-1])
-        time.sleep(0.1)
-        ky.wait(next_button)
+    stop = "a"
+    while stop != "s":
+        for i in range(len(pic_list)):
+            paintBIG(pic_list[len(pic_list)-i-1], i, len(pic_list))
+            input("next")
+        stop = input("stop/again(s,a)")
+        while not stop in ["a", "s"]:
+            print("Wrong input, options(a, s)")
+            stop = input("stop/again(s,a)")
+
 def solve_layers(pos, key_peace, key_location):
     max_x_size = max(size[0])
     max_y_size = max(size[1])
@@ -188,14 +184,28 @@ def solve_layers(pos, key_peace, key_location):
     sequence=find_sequence(solution, layers)
     return sequence
 
-paint_list(solve_layers(position, 3, (0,3)))
+level = int(input("What level(1-4)"))
+good = False
+while good==False:
+    if level==1:
+        size =     ((1,1,1,1,2,1,2,1,1,1), (2,2,2,2,1,1,2,1,1,1)) # lv 10
+        position = ((1,2,0,3,1,0,1,3,0,3), (0,0,1,1,2,3,3,3,4,4))
+        good = True
+    elif level==2:
+        size =     ((1,1,2,1,1,2,2,1,1,1,2,1), (1,1,1,1,1,1,1,1,1,1,2,1)) # lv 14
+        position = ((0,1,2,0,1,2,0,2,3,0,1,3), (0,0,0,1,1,1,2,2,2,3,3,3))
+        good = True
+    elif level==3:
+        size =     ((2,1,1,1,1,1,1,2,1,1), (1,2,1,2,2,1,2,2,1,1)) # lv 15
+        position = ((2,0,1,2,3,1,0,1,3,3), (0,1,1,1,1,2,3,3,3,4))
+        good = True
+    elif level==4:
+        size =     ((1,1,1,1,1,1,2,1,2,1), (2,1,1,2,1,1,1,2,2,2)) # og lv 30
+        position = ((0,1,2,3,1,2,1,0,1,3), (0,0,0,0,1,1,2,3,3,3))
+        good = True
+    else:
+        print("Wrong input, options(1, 2, 3, 4)")
 
-# a= [((0, 1, 2, 3, 1, 2, 1, 0, 1, 3, ),(1, 0, 0, 0, 1, 1, 2, 3, 3, 3, )),
-# ((0, 1, 2, 3, 1, 2, 1, 0, 1, 3, ),(0, 0, 0, 1, 1, 1, 2, 3, 3, 3, )),
-# ((0, 1, 2, 3, 1, 2, 2, 0, 1, 3, ),(0, 0, 0, 0, 1, 1, 2, 3, 3, 3, )),
-# ((0, 1, 2, 3, 1, 2, 0, 0, 1, 3, ),(0, 0, 0, 0, 1, 1, 2, 3, 3, 3, )),
-# ((0, 1, 2, 3, 1, 2, 1, 0, 1, 3, ),(0, 0, 0, 0, 1, 1, 2, 2, 3, 3, )),
-# ((0, 1, 2, 3, 1, 2, 1, 0, 1, 3, ),(0, 0, 0, 0, 1, 1, 2, 3, 3, 2, )),]
-# paint_list(a)
+key_peace = 3
+paint_list(solve_layers(position, key_peace, (0,3)))
 
-# paint_list(all_possible_moves(position, max(size[0]), max(size[1])))
