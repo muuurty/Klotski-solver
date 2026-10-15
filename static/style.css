@@ -1,0 +1,16 @@
+* { box-sizing: border-box; font-family: Arial, sans-serif; }
+body { margin: 0; padding: 0; background: #111; color: #eee; }
+#app { display: flex; gap: 12px; padding: 12px; }
+#left { width: 420px; }
+#right { flex: 1; max-width: 480px; background: #1b1b1b; padding: 12px; border-radius: 8px; }
+#video-wrap { position: relative; width: 400px; height: 500px; background: #000; border-radius: 6px; overflow: hidden; }
+video { position: absolute; width: 100%; height: 100%; object-fit: cover; display: none; }
+canvas { position: absolute; left: 0; top: 0; width: 400px; height: 500px; display: block; }
+#controls-row { margin-top: 8px; display:flex; gap:8px; }
+button { background: #333; color: #fff; border: 1px solid #444; padding: 6px 10px; border-radius: 4px; cursor: pointer; }
+button:hover { filter: brightness(1.1); }
+input[type="color"] { vertical-align: middle; margin-left: 6px; }
+h2,h3 { margin: 8px 0; }
+label { display: block; margin: 6px 0; }
+#status { margin-top: 8px; font-size: 14px; color: #9fd39f; }
+ul { margin: 6px 0; padding-left: 18px; color: #cfcfcf; }

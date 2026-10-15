@@ -1,0 +1,13 @@
+# Byte-compiled / environment
+__pycache__/
+.venv/
+
+# Python packages
+*.pyc
+*.pyo
+
+# VSCode
+.vscode/
+
+# Mac
+.DS_Store

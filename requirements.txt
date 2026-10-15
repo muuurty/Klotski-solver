@@ -1,0 +1,9 @@
+Flask==2.3.4
+flask-cors==3.0.10
+opencv-python-headless==4.8.1.78
+numpy==1.26.4
+Pillow==10.1.0
+imageio==2.31.2
+
+# dev/test
+pytest==7.4.2

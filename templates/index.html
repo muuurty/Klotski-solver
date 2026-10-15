@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Klotski Solver (Flask + CV)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div id="app">
+    <div id="left">
+      <div id="video-wrap">
+        <video id="video" autoplay playsinline></video>
+        <canvas id="board-canvas" width="400" height="500"></canvas>
+      </div>
+      <div id="controls-row">
+        <button id="start-camera">Start Camera</button>
+        <button id="capture">Capture Snapshot</button>
+        <input id="image-upload" type="file" accept="image/*">
+        <button id="detect">Detect Pieces</button>
+      </div>
+    </div>
+
+    <div id="right">
+      <h2>Piece tools</h2>
+      <div>
+        <label>Piece Width:
+          <select id="piece-w">
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </label>
+        <label>Piece Height:
+          <select id="piece-h">
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </label>
+      </div>
+      <div>
+        <label>Color: <input id="piece-color" type="color" value="#EAD2A2"></label>
+        <button id="add-piece-mode">Add Piece Mode: OFF</button>
+        <button id="remove-piece-mode">Remove Mode: OFF</button>
+      </div>
+
+      <h3>Presets</h3>
+      <div id="presets">
+        <button data-level="1">Load Level 1</button>
+        <button data-level="2">Load Level 2</button>
+        <button data-level="3">Load Level 3</button>
+        <button data-level="4">Load Level 4</button>
+      </div>
+
+      <h3>Solver</h3>
+      <div>
+        <label>Key piece index: <input id="key-piece" type="number" value="3" min="0" step="1"></label>
+      </div>
+      <div>
+        <label>Goal X: <input id="goal-x" type="number" value="0" min="0" max="3"></label>
+        <label>Goal Y: <input id="goal-y" type="number" value="0" min="0" max="4"></label>
+      </div>
+      <div id="solver-buttons">
+        <button id="solve">Solve (server)</button>
+        <button id="animate">Animate Solution</button>
+        <div id="status"></div>
+      </div>
+
+      <h3>Tips</h3>
+      <ul>
+        <li>Start camera → Capture snapshot or upload image to use as background.</li>
+        <li>Click "Detect Pieces" to run server-side CV. Edit pieces with Add/Remove mode if needed.</li>
+      </ul>
+    </div>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
