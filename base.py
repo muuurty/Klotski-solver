@@ -2,6 +2,7 @@ import turtle
 import time
 import colorsys
 import keyboard as ky
+import sys
 
 colors = ()
 
@@ -154,23 +155,37 @@ def find_sequence(solution, layers):
 def paint_list(pic_list):
     start_paint()
     stop = "a"
-    while stop != "s":
+    while stop == "a":
         for i in range(len(pic_list)):
             paintBIG(pic_list[len(pic_list)-i-1], i, len(pic_list))
             input("next")
-        stop = input("stop/again(s,a)")
-        while not stop in ["a", "s"]:
-            print("Wrong input, options(a, s)")
-            stop = input("stop/again(s,a)")
-
+        stop = input("stop/again/change level(s,a, c)")
+        while not stop in ["a", "s", "c"]:
+            print("Wrong input, options(a, s, c)")
+            stop = input("stop/again/chose level(s, a, c)")
+    return stop
+def purge(layers):
+    layers2 = []
+    for i in list(range(len(layers)-1, -1, -1)):
+        a = {}
+        for j in layers[i]:
+            if len(layers[i][j]) > 0:
+                a[j] = layers[i][j]
+        layers2.append(a)
+    return layers2
 def solve_layers(pos, key_peace, key_location):
     max_x_size = max(size[0])
     max_y_size = max(size[1])
     layers=[{pos:all_possible_moves(pos, max_x_size, max_y_size)}] #layers: sve, list
     counter=0
     is_done=False
+    layer = 0
     while is_done==False: #i: sloj, dict
+        layer+=1
+        # print("try append")
         layers.append({}) # dodaje idući sloj
+        # print("all good")
+        
         for j in layers[counter].values(): #j: toupl veza
             for k in j:
                 if is_new(layers, k): 
@@ -179,33 +194,46 @@ def solve_layers(pos, key_peace, key_location):
                         is_done=True
                         solution = k
                         break
+        # for i in layers:
+        #     print(len(i), end=", ")
+        # if layer%3==0:
+        #     layers = purge(layers)
+        #     print(sys.getsizeof(layers), layer)
+        #     li = []
+        #     for i in layers:
+        #         li.append(sys.getsizeof(i))
+        #     print(li, layer)
         counter+=1
 
     sequence=find_sequence(solution, layers)
     return sequence
+def choose_level():
+    global size, position
+    level = input("What level(1-4)")
+    good = False
+    while good==False:
+        if level=='1':
+            size =     ((1,1,1,1,2,1,2,1,1,1), (2,2,2,2,1,1,2,1,1,1)) # lv 10
+            position = ((1,2,0,3,1,0,1,3,0,3), (0,0,1,1,2,3,3,3,4,4))
+            good = True
+        elif level=='2':
+            size =     ((1,1,2,1,1,2,2,1,1,1,2,1), (1,1,1,1,1,1,1,1,1,1,2,1)) # lv 14
+            position = ((0,1,2,0,1,2,0,2,3,0,1,3), (0,0,0,1,1,1,2,2,2,3,3,3))
+            good = True
+        elif level=='3':
+            size =     ((2,1,1,1,1,1,1,2,1,1), (1,2,1,2,2,1,2,2,1,1)) # lv 15
+            position = ((2,0,1,2,3,1,0,1,3,3), (0,1,1,1,1,2,3,3,3,4))
+            good = True
+        elif level=='4':
+            size =     ((1,1,1,1,1,1,2,1,2,1), (2,1,1,2,1,1,1,2,2,2)) # og lv 30
+            position = ((0,1,2,3,1,2,1,0,1,3), (0,0,0,0,1,1,2,3,3,3))
+            good = True
+        else:
+            print("Wrong input, options(1, 2, 3, 4)")
 
-level = int(input("What level(1-4)"))
-good = False
-while good==False:
-    if level==1:
-        size =     ((1,1,1,1,2,1,2,1,1,1), (2,2,2,2,1,1,2,1,1,1)) # lv 10
-        position = ((1,2,0,3,1,0,1,3,0,3), (0,0,1,1,2,3,3,3,4,4))
-        good = True
-    elif level==2:
-        size =     ((1,1,2,1,1,2,2,1,1,1,2,1), (1,1,1,1,1,1,1,1,1,1,2,1)) # lv 14
-        position = ((0,1,2,0,1,2,0,2,3,0,1,3), (0,0,0,1,1,1,2,2,2,3,3,3))
-        good = True
-    elif level==3:
-        size =     ((2,1,1,1,1,1,1,2,1,1), (1,2,1,2,2,1,2,2,1,1)) # lv 15
-        position = ((2,0,1,2,3,1,0,1,3,3), (0,1,1,1,1,2,3,3,3,4))
-        good = True
-    elif level==4:
-        size =     ((1,1,1,1,1,1,2,1,2,1), (2,1,1,2,1,1,1,2,2,2)) # og lv 30
-        position = ((0,1,2,3,1,2,1,0,1,3), (0,0,0,0,1,1,2,3,3,3))
-        good = True
-    else:
-        print("Wrong input, options(1, 2, 3, 4)")
-
-key_peace = 3
-paint_list(solve_layers(position, key_peace, (0,3)))
+key_peace = 3 # og je  8
+stop = "c"
+while stop == "c":
+    choose_level()
+    stop = paint_list(solve_layers(position, key_peace, (0,0)))
 
